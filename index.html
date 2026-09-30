@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Aliya & Ayaz - Nikah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --dark-red: #5a0a13;
+        --deep-red: #3a0408;
+        --gold: #cfa861;
+        --light-gold: #e6c587;
+        --cream: #f4ebdd;
+        --text-dark: #3a1c1d;
+    }
+
+    * { box-sizing: border-box; }
+
+    body, html {
+        margin: 0; padding: 0; 
+        font-family: 'Playfair Display', serif; 
+        background-color: var(--dark-red); 
+        color: var(--cream); 
+        overflow-x: hidden; scroll-behavior: smooth;
+    }
+
+    /* ----------- CURTAIN & COVER ANIMATION ----------- */
+    #cover-screen {
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+        background-color: var(--dark-red);
+        z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center;
+        overflow: hidden; pointer-events: auto;
+    }
+    
+    .cover-overlay {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: radial-gradient(circle, rgba(90,10,19,0.7) 0%, rgba(58,4,8,0.95) 100%);
+        z-index: 101;
+    }
+
+    /* Curtains */
+    .curtain {
+        position: absolute; top: 0; width: 51vw; height: 100vh;
+        background-image: linear-gradient(to right, #4a040b 0%, #7a0b17 20%, #3a0205 40%, #8b0e1e 60%, #4a040b 80%, #6a0812 100%);
+        box-shadow: 0 0 30px rgba(0,0,0,0.9);
+        transition: transform 2.5s cubic-bezier(0.64, 0, 0.1, 1);
+        z-index: 102;
+    }
+    .curtain-left { left: 0; border-right: 3px solid var(--gold); }
+    .curtain-right { right: 0; border-left: 3px solid var(--gold); }
+
+    .open-left { transform: translateX(-110%); }
+    .open-right { transform: translateX(110%); }
+
+    /* Tap UI */
+    #tap-ui {
+        position: relative; z-index: 105; display: flex; flex-direction: column; 
+        align-items: center; cursor: pointer; transition: opacity 0.8s ease;
+    }
+    .tap-circle {
+        width: 70px; height: 70px; border: 1px solid var(--gold); 
+        border-radius: 50%; display: flex; justify-content: center; align-items: center;
+        position: relative; margin-bottom: 20px; background: rgba(0,0,0,0.3);
+    }
+    .tap-circle::after {
+        content: ''; width: 12px; height: 12px; background-color: var(--gold); 
+        border-radius: 50%; animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+    .tap-text {
+        font-family: 'Cinzel', serif; color: var(--gold); font-size: 16px; 
+        text-transform: uppercase; letter-spacing: 4px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    }
+
+    @keyframes ping {
+        0% { transform: scale(1); opacity: 1; }
+        100% { transform: scale(4); opacity: 0; }
+    }
+
+    /* ----------- MAIN CONTENT ----------- */
+    #main-content { 
+        display: block; width: 100%; position: relative; z-index: 10;
+        background-color: var(--cream); color: var(--text-dark);
+    }
+    
+    .bg-dark { background-color: var(--dark-red); color: var(--gold); }
+    .bg-light { background-color: var(--cream); color: var(--text-dark); }
+
+    .cinzel { font-family: 'Cinzel', serif; text-transform: uppercase; letter-spacing: 2px; }
+    .vibes { font-family: 'Great Vibes', cursive; }
+    
+    h2 { font-size: 14px; font-weight: 500; letter-spacing: 3px; margin-bottom: 5px; }
+    h3 { font-family: 'Great Vibes', cursive; font-size: 38px; font-weight: 400; margin: 10px 0; color: var(--dark-red); }
+    
+    .section { padding: 60px 20px; text-align: center; position: relative; }
+    .section-dark h3 { color: var(--gold); }
+    .section-dark p { color: var(--cream); }
+
+    /* Hero Page */
+    .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
+    .hero-content { z-index: 1; text-align: center; padding: 20px; width: 100%; }
+    
+    .bismillah-text { font-size: 38px; color: var(--gold); margin-bottom: 20px; font-family: 'Times New Roman', serif; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+    
+    .hero-subtitle { font-size: 10px; letter-spacing: 3px; line-height: 1.8; margin-bottom: 25px; }
+    .hero-name { font-size: 45px; color: var(--gold); margin: 5px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .hero-ampersand { font-size: 24px; color: var(--light-gold); margin: 5px 0; }
+    .hero-parents { font-size: 11px; color: #d4b581; letter-spacing: 2px; margin-bottom: 20px; }
+    .hero-footer { font-size: 11px; letter-spacing: 1.5px; margin-top: 25px; line-height: 1.8; }
+
+    /* Story & Images */
+    .story-text { font-style: italic; font-size: 16px; line-height: 1.8; max-width: 600px; margin: 0 auto 20px auto; color: var(--text-dark); }
+    .names-capital { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 600; color: var(--dark-red); margin-top: 15px; }
+    
+    /* Tap to Reveal Card */
+    .reveal-container {
+        position: relative; width: 100%; max-width: 350px; height: 180px; margin: 20px auto;
+        border-radius: 10px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        border: 2px solid var(--gold); background: var(--dark-red); cursor: pointer;
+    }
+    .reveal-top {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: radial-gradient(circle, #7a0b17, #3a0408);
+        display: flex; justify-content: center; align-items: center;
+        transition: opacity 1s ease; z-index: 2;
+    }
+    .reveal-text { color: var(--gold); font-family: 'Cinzel', serif; font-size: 18px; letter-spacing: 2px; }
+    .reveal-bottom {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        display: flex; flex-direction: column; justify-content: center; align-items: center;
+        z-index: 1; color: var(--gold);
+    }
+    .reveal-bottom h4 { font-family: 'Cinzel', serif; font-size: 24px; margin: 0; }
+
+    /* Hand Hold Image Frame */
+    .image-frame {
+        width: 100%; max-width: 350px; height: 380px; margin: 25px auto;
+        border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        border: 3px solid var(--gold); position: relative; background-color: #3a0408;
+    }
+    .image-frame img { 
+        width: 100%; height: 100%; object-fit: cover; 
+        transition: transform 3s ease;
+    }
+    .image-frame:hover img { transform: scale(1.05); }
+
+    /* Countdown */
+    .countdown-wrapper { display: flex; justify-content: center; gap: 15px; margin-top: 25px; }
+    .time-box { text-align: center; width: 60px; }
+    .time-box span { font-family: 'Playfair Display', serif; display: block; font-size: 30px; font-weight: 500; color: var(--cream); }
+    .time-box p { font-size: 9px; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); }
+
+    /* Timeline */
+    .timeline { max-width: 350px; margin: 30px auto 0 auto; text-align: left; }
+    .event { display: flex; margin-bottom: 30px; }
+    .time-col { width: 90px; text-align: right; padding-right: 20px; position: relative; }
+    .time-col::after {
+        content: ''; position: absolute; right: -5px; top: 5px; width: 8px; height: 8px;
+        background-color: var(--dark-red); border-radius: 50%; border: 2px solid var(--gold);
+    }
+    .time-col::before {
+        content: ''; position: absolute; right: -2px; top: 15px; width: 2px; height: 80px;
+        background-color: rgba(207, 168, 97, 0.4);
+    }
+    .event:last-child .time-col::before { display: none; }
+    .time-text { font-family: 'Cinzel', serif; font-size: 12px; font-weight: 600; color: var(--dark-red); letter-spacing: 1px; }
+    .details-col { padding-left: 20px; flex: 1; }
+    .details-col h4 { margin: 0 0 5px 0; font-size: 17px; font-weight: 600; color: var(--text-dark); }
+    .details-col p { margin: 0; font-size: 13px; font-style: italic; color: #666; }
+
+    /* Venue Box */
+    .venue-box { 
+        background: var(--dark-red); border: 1px solid var(--gold); padding: 35px 20px;
+        max-width: 350px; margin: 0 auto; border-radius: 5px; position: relative;
+    }
+    .btn {
+        display: inline-block; background: transparent; border: 1px solid var(--gold);
+        color: var(--gold); padding: 8px 18px; font-size: 9px; letter-spacing: 2px;
+        text-transform: uppercase; text-decoration: none; margin-top: 15px; border-radius: 3px;
+        font-family: 'Cinzel', serif;
+    }
+
+    /* Festivity Card */
+    .festivity-card {
+        background: transparent; border: 1px solid rgba(207, 168, 97, 0.6);
+        padding: 25px 20px; max-width: 350px; margin: 0 auto 20px auto; border-radius: 8px;
+    }
+    .festivity-card h4 { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--dark-red); margin: 0 0 5px 0; font-weight: 500; }
+    .festivity-date { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 2px; color: var(--dark-red); font-weight: 600; }
+    .festivity-venue { font-style: italic; font-size: 13px; color: #666; margin: 8px 0 10px 0; }
+</style>
+</head>
+<body>
+
+    <!-- Background Music -->
+    <audio id="bg-music" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939ef74f3.mp3?filename=romantic-wedding-piano-and-strings-122675.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- 1. Clean Curtain Cover Screen -->
+    <div id="cover-screen">
+        <div class="cover-overlay"></div>
+        <div class="curtain curtain-left" id="c-left"></div>
+        <div class="curtain curtain-right" id="c-right"></div>
+        
+        <div id="tap-ui" onclick="openInvite()">
+            <div class="tap-circle"></div>
+            <div class="tap-text">Tap to open</div>
+        </div>
+    </div>
+
+    <!-- 2. Main Invitation Content -->
+    <div id="main-content">
+        
+        <!-- Hero Section -->
+        <div class="section hero bg-dark">
+            <div class="hero-content">
+                <div class="bismillah-text">﷽</div>
+                
+                <div class="hero-subtitle cinzel">We request the honour of your<br>presence at the nikah of</div>
+                
+                <div class="hero-name vibes">Aliya Fatima</div>
+                <div class="hero-parents cinzel">Daughter of Faisal Khan</div>
+                
+                <div class="hero-ampersand vibes">&</div>
+                
+                <div class="hero-name vibes">Ayaz Khan</div>
+                <div class="hero-parents cinzel">Son of Meraj Ahmad</div>
+                
+                <div class="hero-footer cinzel">As they begin their forever in<br>faith and love.</div>
+                
+                <div class="cinzel" style="margin-top: 40px; font-size: 10px; letter-spacing: 3px; opacity: 0.8;">SCROLL ↓</div>
+            </div>
+        </div>
+
+        <!-- Welcome Section -->
+        <div class="section bg-light">
+            <p class="story-text">With hearts full of gratitude, we warmly invite you to join us as we celebrate this beautiful beginning with the love, prayers, and blessings of our families.</p>
+            <div class="names-capital">Aliya Fatima & Ayaz Khan</div>
+        </div>
+
+        <!-- Tap to Reveal Section (Nikah Date: 19 Dec 2026) -->
+        <div class="section bg-light" style="padding-top: 10px;">
+            <h2 class="cinzel">A Date to Hold Close</h2>
+            <h3>Tap to Reveal</h3>
+            
+            <div class="reveal-container" onclick="revealDate(this)">
+                <div class="reveal-top" id="scratch-top">
+                    <span class="reveal-text">TAP TO REVEAL</span>
+                </div>
+                <div class="reveal-bottom">
+                    <h4>DECEMBER 19, 2026</h4>
+                    <p style="font-style: italic; margin-top: 5px; font-size: 13px;">Insha'Allah</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Our Story Section -->
+        <div class="section bg-light">
+            <h2 class="cinzel">Our Story</h2>
+            <h3>Moments, softly held</h3>
+            <div class="image-frame">
+                <img src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop" alt="Bride and Groom holding hands">
+            </div>
+        </div>
+
+        <!-- Countdown Section -->
+        <div class="section bg-dark section-dark">
+            <h2 class="cinzel" style="color: var(--cream); font-size: 11px;">Until we say Qubool Hai</h2>
+            <h3>Counting every heartbeat</h3>
+            
+            <div class="countdown-wrapper">
+                <div class="time-box"><span id="days">00</span><p>Days</p></div>
+                <div class="time-box"><span id="hours">00</span><p>Hours</p></div>
+                <div class="time-box"><span id="mins">00</span><p>Minutes</p></div>
+                <div class="time-box"><span id="secs">00</span><p>Seconds</p></div>
+            </div>
+        </div>
+
+        <!-- Itinerary Section -->
+        <div class="section bg-light">
+            <h2 class="cinzel">The Celebration</h2>
+            <h3>Our Nikah day</h3>
+            
+            <div class="timeline">
+                <div class="event">
+                    <div class="time-col"><span class="time-text">6:30 PM</span></div>
+                    <div class="details-col"><h4>Guest Arrival</h4></div>
+                </div>
+                <div class="event">
+                    <div class="time-col"><span class="time-text">7:00 PM</span></div>
+                    <div class="details-col">
+                        <h4>Nikah Ceremony</h4>
+                        <p>Solemnization & duas</p>
+                    </div>
+                </div>
+                <div class="event">
+                    <div class="time-col"><span class="time-text">7:30 PM</span></div>
+                    <div class="details-col">
+                        <h4>Blessings</h4>
+                        <p>Family greetings & photographs</p>
+                    </div>
+                </div>
+                <div class="event">
+                    <div class="time-col"><span class="time-text">8:00 PM</span></div>
+                    <div class="details-col">
+                        <h4>Dinner</h4>
+                        <p>A feast shared with love</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Venue Section (Green Garden) -->
+        <div class="section bg-light" style="padding-top: 5px;">
+            <div class="venue-box">
+                <h2 class="cinzel" style="color: var(--gold); border-bottom: none; font-size: 13px; margin-bottom: 15px;">The Venue</h2>
+                <h3 style="color: var(--cream); margin: 0 0 8px 0; font-family: 'Playfair Display', serif; font-style: italic; font-size: 30px;">Green Garden</h3>
+                <p style="margin: 0; font-size: 13px; letter-spacing: 1px; color: var(--light-gold);">Nikah Venue</p>
+                <a href="https://maps.app.goo.gl/vVu76B5x2vpgcRDv7?g_st=ic" target="_blank" class="btn">View on Google Maps</a>
+            </div>
+        </div>
+
+        <!-- Festivities Section (Walima at Milan Marriage Lawn on 21 Dec 2026) -->
+        <div class="section bg-light" style="padding-top: 15px;">
+            <h2 class="cinzel">The Festivities</h2>
+            <h3>Days filled with joy</h3>
+            
+            <div style="margin-top: 30px;">
+                <div class="festivity-card">
+                    <h4>Walima</h4>
+                    <div class="festivity-date">DECEMBER 21 • 7:30 PM</div>
+                    <div class="festivity-venue">Milan Marriage Lawn</div>
+                    <a href="https://maps.app.goo.gl/mub1ZveS6ZxRDndn7?g_st=ic" target="_blank" class="btn" style="border-color: #ccc; color: #666; margin-top: 5px;">View on Google Maps</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Closing Section -->
+        <div class="section bg-dark section-dark">
+            <h2 class="cinzel" style="color: var(--cream); font-size: 11px;">With all our hearts</h2>
+            <h3 style="font-size: 34px; line-height: 1.2;">Your presence is<br>our present</h3>
+            <p style="max-width: 350px; margin: 20px auto 0 auto; font-style: italic; line-height: 1.8; font-size: 14px;">Your love, Blessings, and presence are the greatest gifts we could ever ask for.</p>
+        </div>
+        
+        <div class="section bg-light" style="padding: 40px 20px 80px 20px;">
+            <p style="font-style: italic; font-size: 17px; color: var(--text-dark);">We can't wait to celebrate with you.</p>
+            <div style="font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 600; color: var(--dark-red); margin-top: 15px;">Aliya Fatima & Ayaz Khan</div>
+            <p style="font-family: 'Cinzel', serif; font-size: 12px; color: #555; margin-top: 8px; letter-spacing: 1px;">December 19, 2026 • Green Garden</p>
+        </div>
+
+    </div>
+
+    <script>
+        // 1. Open Invite & Play Music
+        function openInvite() {
+            const tapUI = document.getElementById('tap-ui');
+            const overlay = document.querySelector('.cover-overlay');
+            
+            tapUI.style.opacity = '0';
+            overlay.style.transition = 'opacity 1.5s ease';
+            overlay.style.opacity = '0';
+
+            const audio = document.getElementById("bg-music");
+            audio.play().catch(e => console.log("Audio playback initiated"));
+
+            setTimeout(() => {
+                tapUI.style.display = 'none';
+                document.getElementById('c-left').classList.add('open-left');
+                document.getElementById('c-right').classList.add('open-right');
+
+                setTimeout(() => {
+                    document.getElementById('cover-screen').style.display = 'none';
+                }, 1000);
+            }, 500);
+        }
+
+        // 2. Tap to Reveal Date
+        function revealDate(element) {
+            const topLayer = document.getElementById('scratch-top');
+            topLayer.style.opacity = '0';
+            setTimeout(() => {
+                topLayer.style.display = 'none';
+            }, 1000);
+        }
+
+        // 3. Realtime Live Countdown Engine (Target: Dec 19, 2026)
+        const targetDate = new Date("Dec 19, 2026 19:00:00").getTime();
+        
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance > 0) {
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const secs = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById("days").innerText = days.toString().padStart(2, '0');
+                document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
+                document.getElementById("mins").innerText = mins.toString().padStart(2, '0');
+                document.getElementById("secs").innerText = secs.toString().padStart(2, '0');
+            } else {
+                document.getElementById("days").innerText = "00";
+                document.getElementById("hours").innerText = "00";
+                document.getElementById("mins").innerText = "00";
+                document.getElementById("secs").innerText = "00";
+            }
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
